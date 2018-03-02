@@ -23,6 +23,9 @@
 extern crate rand;
 extern crate petgraph;
 extern crate itertools;
+#[macro_use]
+extern crate serde_derive;
+extern crate serde;
 
 use std::borrow::ToOwned;
 use std::collections::HashMap;
@@ -35,6 +38,7 @@ use std::iter::Map;
 use std::path::Path;
 use rand::{Rng, thread_rng};
 use petgraph::graph::Graph;
+use itertools::Itertools;
 
 /// The definition of all types that can be used in a Chain.
 pub trait Chainable: Eq + Hash + Clone {}
@@ -44,7 +48,7 @@ type Token<T> = Option<T>;
 
 /// A generic [Markov chain](https://en.wikipedia.org/wiki/Markov_chain) for almost any type. This
 /// uses HashMaps internally, and so Eq and Hash are both required.
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq, Debug, Serialize, Deserialize)]
 pub struct Chain<T> where T: Chainable {
     map: HashMap<Vec<Token<T>>, HashMap<Token<T>, usize>>,
     order: usize,
